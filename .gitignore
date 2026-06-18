@@ -95,3 +95,10 @@ $RECYCLE.BIN/
 *.temp
 *.orig
 *.rej
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+# Captures système
+.DS_Store
