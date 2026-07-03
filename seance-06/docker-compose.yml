@@ -12,10 +12,10 @@ x-airflow-common: &airflow-common
     MINIO_ACCESS_KEY: "anfa-app-key"
     MINIO_SECRET_KEY: "anfa-app-secret-2026"
   volumes:
-    - ./dags:/opt/airflow/dags
-    - ./scripts:/opt/airflow/scripts
-    - ./logs:/opt/airflow/logs
-    - ./plugins:/opt/airflow/plugins
+    - ./dags:/opt/airflow/dags:z
+    - ./scripts:/opt/airflow/scripts:z
+    - ./logs:/opt/airflow/logs:z
+    - ./plugins:/opt/airflow/plugins:z
     - /var/run/docker.sock:/var/run/docker.sock   # pour soumettre Spark via docker exec
   depends_on:
     postgres:
@@ -24,7 +24,7 @@ x-airflow-common: &airflow-common
 services:
 
   postgres:
-    image: postgres:18-alpine
+    image: postgres:16-alpine
     container_name: anfa-postgres
     restart: unless-stopped
     environment:
@@ -97,7 +97,7 @@ services:
       - "8090:8080"          # UI Spark : localhost:8090 (8080 réservé Airflow)
     volumes:
       - ./scripts:/opt/scripts
-      - ../data/referentiel:/opt/data/referentiel:ro
+      - ../data/referentiel:/opt/data/referentiel:roz
     command: >
       /opt/spark/sbin/start-master.sh
 
@@ -115,7 +115,7 @@ services:
       - "8081:8081"
     volumes:
       - ./scripts:/opt/scripts
-      - ../data/referentiel:/opt/data/referentiel:ro
+      - ../data/referentiel:/opt/data/referentiel:roz
     command: >
       /opt/spark/sbin/start-worker.sh spark://spark-master:7077
 
