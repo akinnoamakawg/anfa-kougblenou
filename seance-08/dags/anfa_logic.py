@@ -33,8 +33,8 @@ def verifier_liste_fichiers(objets: list) -> dict:
 
     return {
         "nb_fichiers": nb_fichiers,
-        "taille_totale_ko": round(taille_totale_octets / 1024, 1),
-    }
+        "taille_totale_ko": round(taille_totale_octets / 1000, 1), # ← BUG : 1000 au lieu de 1024
+}
 
 
 def construire_message_notification(resume: dict) -> str:
