@@ -13,7 +13,7 @@ services:
     ports:
       - "9090:9090"     # UI web de Prometheus
     volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro,z
 
   # ──────────────────────────────────────────────────────
   # Node Exporter : métriques de la machine hôte
@@ -31,6 +31,7 @@ services:
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:v0.52.0
     container_name: anfa-cadvisor
+    privileged: true                        # c'est fait expres pour ça, il a besoin d'accéder à l'OS hôte
     restart: unless-stopped
     ports:
       - "8087:8080"
@@ -38,7 +39,7 @@ services:
       - /:/rootfs:ro
       - /var/run:/var/run:ro
       - /sys:/sys:ro
-      - /var/lib/docker/:/var/lib/docker:ro
+      - /var/lib/docker/:/var/lib/docker:ro,z   # le z est pour SELinux, si vous êtes sur Linux et que vous avez SELinux activé, il faut le mettre pour que Docker puisse lire les fichiers
 
   # ──────────────────────────────────────────────────────
   # Notre exportateur métier : fraîcheur des données Anfa
@@ -63,6 +64,6 @@ services:
       GF_SECURITY_ADMIN_USER: admin
       GF_SECURITY_ADMIN_PASSWORD: admin
     volumes:
-      - ./provisioning/datasources:/etc/grafana/provisioning/datasources:ro
+      - ./provisioning/datasources:/etc/grafana/provisioning/datasources:ro,z
 
 volumes: {}
